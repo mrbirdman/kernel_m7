@@ -162,6 +162,9 @@ int clk_prepare(struct clk *clk)
 		if (ret)
 			goto err_prepare_depends;
 
+		ret = vote_rate_vdd(clk, clk->rate);
+		if (ret)
+			goto err_vote_vdd;
 		if (clk->ops->prepare)
 			ret = clk->ops->prepare(clk);
 		if (ret)
@@ -172,6 +175,8 @@ out:
 	mutex_unlock(&clk->prepare_lock);
 	return ret;
 err_prepare_clock:
+	unvote_rate_vdd(clk, clk->rate);
+err_vote_vdd:
 	clk_unprepare(clk->depends);
 err_prepare_depends:
 	clk_unprepare(parent);
@@ -207,9 +212,6 @@ int clk_enable(struct clk *clk)
 				goto err_enable_depends;
 		}
 
-		ret = vote_rate_vdd(clk, clk->rate);
-		if (ret)
-			goto err_vote_vdd;
 		trace_clock_enable(clk->dbg_name, 1, smp_processor_id());
 		if (clk->ops->enable)
 			ret = clk->ops->enable(clk);
@@ -227,8 +229,6 @@ int clk_enable(struct clk *clk)
 	return 0;
 
 err_enable_clock:
-	unvote_rate_vdd(clk, clk->rate);
-err_vote_vdd:
 	clk_disable(clk->depends);
 err_enable_depends:
 	clk_disable(parent);
@@ -259,16 +259,9 @@ void clk_disable(struct clk *clk)
 		trace_clock_disable(clk->dbg_name, 0, smp_processor_id());
 		if (clk->ops->disable)
 			clk->ops->disable(clk);
-		unvote_rate_vdd(clk, clk->rate);
 
-		
-		if (!(clk->flags&CLKFLAG_IGNORE)) {
-			clk_disable(clk->depends);
-			clk_disable(parent);
-			spin_lock(&clk_enable_list_lock);
-			list_del(&clk->enable_list);
-			spin_unlock(&clk_enable_list_lock);
-		}
+		clk_disable(clk->depends);
+		clk_disable(parent);
 	}
 	clk->count--;
 out:
@@ -298,6 +291,7 @@ void clk_unprepare(struct clk *clk)
 
 		if (clk->ops->unprepare)
 			clk->ops->unprepare(clk);
+		unvote_rate_vdd(clk, clk->rate);
 		clk_unprepare(clk->depends);
 		clk_unprepare(parent);
 	}
@@ -333,7 +327,7 @@ EXPORT_SYMBOL(clk_get_rate);
 
 int clk_set_rate(struct clk *clk, unsigned long rate)
 {
-	unsigned long start_rate, flags;
+	unsigned long start_rate;
 	int rc = 0;
 
 	if (IS_ERR_OR_NULL(clk))
@@ -342,14 +336,14 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 	if (!clk->ops->set_rate)
 		return -ENOSYS;
 
-	spin_lock_irqsave(&clk->lock, flags);
+	mutex_lock(&clk->prepare_lock);
 
 	
 	if (clk->rate == rate)
 		goto out;
 
-	trace_clock_set_rate(clk->dbg_name, rate, smp_processor_id());
-	if (clk->count) {
+	trace_clock_set_rate(clk->dbg_name, rate, raw_smp_processor_id());
+	if (clk->prepare_count) {
 		start_rate = clk->rate;
 		
 		rc = vote_rate_vdd(clk, rate);
@@ -369,11 +363,12 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 	if (!rc)
 		clk->rate = rate;
 out:
-	spin_unlock_irqrestore(&clk->lock, flags);
+	mutex_unlock(&clk->prepare_lock);
 	return rc;
 
 err_set_rate:
 	unvote_rate_vdd(clk, rate);
+err_vote_vdd:
 	goto out;
 }
 EXPORT_SYMBOL(clk_set_rate);
