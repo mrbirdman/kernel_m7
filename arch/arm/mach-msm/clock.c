@@ -219,7 +219,7 @@ int clk_enable(struct clk *clk)
 		if (ret)
 			goto err_enable_depends;
 
-		trace_clock_enable(clk->dbg_name, 1, smp_processor_id());
+		trace_clock_enable(name, 1, smp_processor_id());
 		if (clk->ops->enable)
 			ret = clk->ops->enable(clk);
 		if (ret)
@@ -345,7 +345,7 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 	if (clk->rate == rate)
 		goto out;
 
-	trace_clock_set_rate(clk->dbg_name, rate, raw_smp_processor_id());
+	trace_clock_set_rate(name, rate, raw_smp_processor_id());
 	if (clk->prepare_count) {
 		start_rate = clk->rate;
 		
