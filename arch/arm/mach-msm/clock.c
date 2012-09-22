@@ -71,25 +71,23 @@ static int update_vdd(struct clk_vdd_class *vdd_class)
 
 int vote_vdd_level(struct clk_vdd_class *vdd_class, int level)
 {
-	unsigned long flags;
 	int rc;
 
-	spin_lock_irqsave(&vdd_class->lock, flags);
+	mutex_lock(&vdd_class->lock);
 	vdd_class->level_votes[level]++;
 	rc = update_vdd(vdd_class);
 	if (rc)
 		vdd_class->level_votes[level]--;
-	spin_unlock_irqrestore(&vdd_class->lock, flags);
+	mutex_unlock(&vdd_class->lock);
 
 	return rc;
 }
 
 int unvote_vdd_level(struct clk_vdd_class *vdd_class, int level)
 {
-	unsigned long flags;
 	int rc = 0;
 
-	spin_lock_irqsave(&vdd_class->lock, flags);
+	mutex_lock(&vdd_class->lock);
 	if (WARN(!vdd_class->level_votes[level],
 			"Reference counts are incorrect for %s level %d\n",
 			vdd_class->class_name, level))
@@ -99,7 +97,7 @@ int unvote_vdd_level(struct clk_vdd_class *vdd_class, int level)
 	if (rc)
 		vdd_class->level_votes[level]++;
 out:
-	spin_unlock_irqrestore(&vdd_class->lock, flags);
+	mutex_unlock(&vdd_class->lock);
 	return rc;
 }
 
