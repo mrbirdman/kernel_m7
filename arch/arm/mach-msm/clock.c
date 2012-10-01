@@ -130,6 +130,7 @@ static void unvote_rate_vdd(struct clk *clk, unsigned long rate)
 	unvote_vdd_level(clk->vdd_class, level);
 }
 
+/* Returns true if the rate is valid without voting for it */
 static bool is_rate_valid(struct clk *clk, unsigned long rate)
 {
 	int level;
@@ -368,7 +369,6 @@ out:
 
 err_set_rate:
 	unvote_rate_vdd(clk, rate);
-err_vote_vdd:
 	goto out;
 }
 EXPORT_SYMBOL(clk_set_rate);
