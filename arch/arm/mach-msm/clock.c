@@ -345,11 +345,7 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 	if (clk->rate == rate)
 		goto out;
 
-<<<<<<< HEAD
-	trace_clock_set_rate(name, rate, raw_smp_processor_id());
-=======
 	trace_clock_set_rate(clk->dbg_name, rate, raw_smp_processor_id());
->>>>>>> 2c2875f... msm: clock: Move voltage scaling to prepare/unprepare
 	if (clk->prepare_count) {
 		start_rate = clk->rate;
 		
@@ -375,10 +371,6 @@ out:
 
 err_set_rate:
 	unvote_rate_vdd(clk, rate);
-<<<<<<< HEAD
-=======
-err_vote_vdd:
->>>>>>> 2c2875f... msm: clock: Move voltage scaling to prepare/unprepare
 	goto out;
 }
 EXPORT_SYMBOL(clk_set_rate);
