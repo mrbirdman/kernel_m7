@@ -4434,7 +4434,25 @@ static struct branch_clk csi_vfe_clk = {
 		.md_val = MD8(8, m, 0, n), \
 		.ns_val = NS(31, 24, n, m, 5, 4, 3, d, 2, 0, s##_to_lpa_mux), \
 	}
-static struct clk_freq_tbl clk_tbl_aif_osr[] = {
+
+static struct clk_freq_tbl clk_tbl_aif_osr_492[] = {
+	F_AIF_OSR(       0, gnd,  1, 0,   0),
+	F_AIF_OSR(  512000, pll4, 4, 1, 240),
+	F_AIF_OSR(  768000, pll4, 4, 1, 160),
+	F_AIF_OSR( 1024000, pll4, 4, 1, 120),
+	F_AIF_OSR( 1536000, pll4, 4, 1,  80),
+	F_AIF_OSR( 2048000, pll4, 4, 1,  60),
+	F_AIF_OSR( 3072000, pll4, 4, 1,  40),
+	F_AIF_OSR( 4096000, pll4, 4, 1,  30),
+	F_AIF_OSR( 6144000, pll4, 4, 1,  20),
+	F_AIF_OSR( 8192000, pll4, 4, 1,  15),
+	F_AIF_OSR(12288000, pll4, 4, 1,  10),
+	F_AIF_OSR(24576000, pll4, 4, 1,   5),
+	F_AIF_OSR(27000000, pxo,  1, 0,   0),
+	F_END
+};
+
+static struct clk_freq_tbl clk_tbl_aif_osr_393[] = {
 	F_AIF_OSR(       0, gnd,  1, 0,   0),
 	F_AIF_OSR(  512000, pll4, 4, 1, 192),
 	F_AIF_OSR(  768000, pll4, 4, 1, 128),
@@ -4448,6 +4466,7 @@ static struct clk_freq_tbl clk_tbl_aif_osr[] = {
 	F_AIF_OSR(12288000, pll4, 4, 1,   8),
 	F_AIF_OSR(18432000, pll4, 4, 3,  16), 
 	F_AIF_OSR(24576000, pll4, 4, 1,   4),
+	F_AIF_OSR(27000000, pxo,  1, 0,   0),
 	F_END
 };
 
@@ -4468,12 +4487,12 @@ static struct clk_freq_tbl clk_tbl_aif_osr[] = {
 		.ns_mask = (BM(31, 24) | BM(6, 0)), \
 		.mnd_en_mask = BIT(8), \
 		.set_rate = set_rate_mnd, \
-		.freq_tbl = clk_tbl_aif_osr, \
+		.freq_tbl = clk_tbl_aif_osr_393, \
 		.current_freq = &rcg_dummy_freq, \
 		.c = { \
 			.dbg_name = #i "_clk", \
 			.ops = &clk_ops_rcg, \
-			VDD_DIG_FMAX_MAP1(LOW, 24576000), \
+			VDD_DIG_FMAX_MAP1(LOW, 27000000), \
 			CLK_INIT(i##_clk.c), \
 		}, \
 	}
@@ -4494,12 +4513,12 @@ static struct clk_freq_tbl clk_tbl_aif_osr[] = {
 		.ns_mask = (BM(31, 24) | BM(6, 0)), \
 		.mnd_en_mask = BIT(8), \
 		.set_rate = set_rate_mnd, \
-		.freq_tbl = clk_tbl_aif_osr, \
+		.freq_tbl = clk_tbl_aif_osr_393, \
 		.current_freq = &rcg_dummy_freq, \
 		.c = { \
 			.dbg_name = #i "_clk", \
 			.ops = &clk_ops_rcg, \
-			VDD_DIG_FMAX_MAP1(LOW, 24576000), \
+			VDD_DIG_FMAX_MAP1(LOW, 27000000), \
 			CLK_INIT(i##_clk.c), \
 		}, \
 	}
@@ -4575,8 +4594,31 @@ static CLK_AIF_BIT_DIV(spare_i2s_spkr_bit, LCC_SPARE_I2S_SPKR_NS_REG,
 		.md_val = MD16(m, n), \
 		.ns_val = NS(31, 16, n, m, 5, 4, 3, d, 2, 0, s##_to_lpa_mux), \
 	}
+
 static struct clk_freq_tbl clk_tbl_pcm[] = {
 	{ .ns_val = BIT(10)  },
+
+static struct clk_freq_tbl clk_tbl_pcm_492[] = {
+	{ .ns_val = BIT(10) /* external input */ },
+	F_PCM(  256000, pll4, 4, 1, 480),
+	F_PCM(  512000, pll4, 4, 1, 240),
+	F_PCM(  768000, pll4, 4, 1, 160),
+	F_PCM( 1024000, pll4, 4, 1, 120),
+	F_PCM( 1536000, pll4, 4, 1,  80),
+	F_PCM( 2048000, pll4, 4, 1,  60),
+	F_PCM( 3072000, pll4, 4, 1,  40),
+	F_PCM( 4096000, pll4, 4, 1,  30),
+	F_PCM( 6144000, pll4, 4, 1,  20),
+	F_PCM( 8192000, pll4, 4, 1,  15),
+	F_PCM(12288000, pll4, 4, 1,  10),
+	F_PCM(24576000, pll4, 4, 1,   5),
+	F_PCM(27000000, pxo,  1, 0,   0),
+	F_END
+};
+
+static struct clk_freq_tbl clk_tbl_pcm_393[] = {
+	{ .ns_val = BIT(10) /* external input */ },
+	F_PCM(  256000, pll4, 4, 1, 384),
 	F_PCM(  512000, pll4, 4, 1, 192),
 	F_PCM(  768000, pll4, 4, 1, 128),
 	F_PCM( 1024000, pll4, 4, 1,  96),
@@ -4588,6 +4630,7 @@ static struct clk_freq_tbl clk_tbl_pcm[] = {
 	F_PCM( 8192000, pll4, 4, 1,  12),
 	F_PCM(12288000, pll4, 4, 1,   8),
 	F_PCM(24576000, pll4, 4, 1,   4),
+	F_PCM(27000000, pxo,  1, 0,   0),
 	F_END
 };
 
@@ -4612,7 +4655,7 @@ static struct rcg_clk pcm_clk = {
 	.c = {
 		.dbg_name = "pcm_clk",
 		.ops = &clk_ops_rcg,
-		VDD_DIG_FMAX_MAP1(LOW, 24576000),
+		VDD_DIG_FMAX_MAP1(LOW, 27000000),
 		CLK_INIT(pcm_clk.c),
 		.rate = ULONG_MAX,
 	},
@@ -4634,12 +4677,12 @@ static struct rcg_clk audio_slimbus_clk = {
 	.ns_mask = (BM(31, 24) | BM(6, 0)),
 	.mnd_en_mask = BIT(8),
 	.set_rate = set_rate_mnd,
-	.freq_tbl = clk_tbl_aif_osr,
+	.freq_tbl = clk_tbl_aif_osr_393,
 	.current_freq = &rcg_dummy_freq,
 	.c = {
 		.dbg_name = "audio_slimbus_clk",
 		.ops = &clk_ops_rcg,
-		VDD_DIG_FMAX_MAP1(LOW, 24576000),
+		VDD_DIG_FMAX_MAP1(LOW, 27000000),
 		CLK_INIT(audio_slimbus_clk.c),
 	},
 };
