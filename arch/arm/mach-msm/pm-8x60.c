@@ -46,6 +46,7 @@
 
 #include "acpuclock.h"
 #include "clock.h"
+#include <mach/clk-provider.h>
 #include "avs.h"
 #include <mach/cpuidle.h>
 #include "idle.h"

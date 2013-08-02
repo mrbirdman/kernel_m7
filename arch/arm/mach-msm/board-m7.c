@@ -92,6 +92,7 @@
 #include "board-m7.h"
 #include "spm.h"
 #include <mach/mpm.h>
+#include "clock.h"
 #include "rpm_resources.h"
 #include "pm.h"
 #include "pm-boot.h"

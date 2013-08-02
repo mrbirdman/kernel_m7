@@ -36,6 +36,7 @@
 #include <mach/mmc.h>
 
 #include "devices.h"
+#include "clock.h"
 
 extern struct sys_timer msm_timer;
 

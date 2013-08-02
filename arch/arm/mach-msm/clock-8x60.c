@@ -23,7 +23,6 @@
 #include <linux/clkdev.h>
 
 #include <mach/msm_iomap.h>
-#include <mach/clk.h>
 #include <mach/scm-io.h>
 #include <mach/rpm.h>
 #include <mach/rpm-regulator.h>
@@ -32,6 +31,7 @@
 #include "clock-rpm.h"
 #include "clock-voter.h"
 #include "clock-pll.h"
+#include "clock.h"
 
 #ifdef CONFIG_MSM_SECURE_IO
 #undef readl_relaxed

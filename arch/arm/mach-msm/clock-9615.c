@@ -24,7 +24,6 @@
 #include <asm/mach-types.h>
 
 #include <mach/msm_iomap.h>
-#include <mach/clk.h>
 #include <mach/rpm-9615.h>
 #include <mach/rpm-regulator.h>
 
@@ -33,6 +32,7 @@
 #include "clock-rpm.h"
 #include "devices.h"
 #include "clock-pll.h"
+#include "clock.h"
 
 #define REG(off)	(MSM_CLK_CTL_BASE + (off))
 #define REG_LPA(off)	(MSM_LPASS_CLK_CTL_BASE + (off))

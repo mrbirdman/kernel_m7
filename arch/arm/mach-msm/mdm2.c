@@ -28,7 +28,6 @@
 #include <linux/debugfs.h>
 #include <linux/completion.h>
 #include <linux/workqueue.h>
-#include <linux/clk.h>
 #include <linux/mfd/pmic8058.h>
 #include <asm/mach-types.h>
 #include <asm/uaccess.h>
@@ -40,7 +39,6 @@
 #include <mach/msm_watchdog.h>
 #include <linux/async.h>
 #include "devices.h"
-#include "clock.h"
 #include "mdm_private.h"
 
 #if defined(pr_warn)

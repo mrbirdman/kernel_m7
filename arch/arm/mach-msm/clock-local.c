@@ -21,13 +21,13 @@
 #include <linux/io.h>
 #include <linux/spinlock.h>
 #include <linux/delay.h>
+#include <mach/clk-provider.h>
 #include <linux/clk.h>
 
 #include <mach/msm_iomap.h>
 #include <mach/clk.h>
 #include <mach/scm-io.h>
 
-#include "clock.h"
 #include "clock-local.h"
 
 #ifdef CONFIG_MSM_SECURE_IO
