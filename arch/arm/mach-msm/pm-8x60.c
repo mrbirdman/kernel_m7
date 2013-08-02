@@ -1269,7 +1269,7 @@ static int msm_pm_enter(suspend_state_t state)
 		clock_debug_print_enabled();
 
 		
-		keep_dig_voltage_low_in_idle(false);
+		//keep_dig_voltage_low_in_idle(false);
 
 #ifdef CONFIG_MSM_SLEEP_TIME_OVERRIDE
 		if (msm_pm_sleep_time_override > 0) {
@@ -1321,7 +1321,7 @@ static int msm_pm_enter(suspend_state_t state)
 		}
 
 		
-		keep_dig_voltage_low_in_idle(true);
+		//keep_dig_voltage_low_in_idle(true);
 
 		time = msm_pm_timer_exit_suspend(time, period);
 		msm_pm_add_stat(MSM_PM_STAT_SUSPEND, time);
@@ -1488,7 +1488,7 @@ static int __init msm_pm_init(void)
 	pr_info("%s: msm_pm_boot_vector 0x%x", __func__, addr);
 	store_pm_boot_vector_addr(addr);
 
-	keep_dig_voltage_low_in_idle(true);
+	//keep_dig_voltage_low_in_idle(true);
 
 	if(board_mfg_mode() == 6 || board_mfg_mode() == 8) {
 		static struct pm_qos_request pm_qos_req_dma;
